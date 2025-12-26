@@ -3,7 +3,7 @@ name: Deploy backend-js (Orange Pi)
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
@@ -16,7 +16,7 @@ jobs:
       - name: Build & Deploy Docker
         run: |
           echo "📦 Pull latest code"
-          git pull origin main
+          git pull origin master
 
           echo "🛑 Stop old container"
           docker stop backend-js || true
