@@ -1,40 +1,35 @@
 const express = require("express");
-const app = express();
+const mysql = require("mysql2/promise");
 
-const PORT = 3001;
+const app = express();
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 
-/**
- * ROOT
- * /api/backend-js/
- */
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
+
 app.get("/", (req, res) => {
   res.json({
     status: "ok",
-    message: "Backend JS running in Docker 🚀",
+    message: "Backend JS running with MySQL 🚀",
   });
 });
 
-/**
- * HELLO
- * /api/backend-js/hello
- */
 app.get("/hello", (req, res) => {
-  res.json({
-    message: "Hello from backend-js 👋",
-  });
+  res.json({ message: "Hello from backend-js 👋" });
 });
 
-app.get("/deploy", (req, res) => {
-  res.json({
-    message: "Hello from auto deploy fixed auto deploy backend-js 👋",
-  });
+app.get("/db-check", async (req, res) => {
+  const [rows] = await pool.query("SELECT NOW() as now");
+  res.json(rows[0]);
 });
 
-/**
- * 404 handler
- */
 app.use((req, res) => {
   res.status(404).json({
     error: "Not Found",

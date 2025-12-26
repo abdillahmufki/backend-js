@@ -13,23 +13,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Build & Deploy Docker
+      - name: Deploy with docker-compose
         run: |
-          echo "📦 Pull latest code"
+          cd /home/mufkimustache/projects/backend-js
+
+          echo "🔄 Pull latest code"
           git pull origin master
 
-          echo "🛑 Stop old container"
-          docker stop backend-js || true
-          docker rm backend-js || true
-
-          echo "🐳 Build new image"
-          docker build -t backend-js .
-
-          echo "🚀 Run new container"
-          docker run -d \
-            --name backend-js \
-            -p 3001:3001 \
-            --restart unless-stopped \
-            backend-js
+          echo "🐳 Docker compose deploy"
+          docker compose down
+          docker compose build
+          docker compose up -d
 
           echo "✅ Deploy finished"
