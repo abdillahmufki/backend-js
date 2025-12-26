@@ -11,17 +11,17 @@ services:
       - mariadb
 
   mariadb:
-    image: lscr.io/linuxserver/mariadb
+    image: yobasystems/alpine-mariadb:10.5
     container_name: backend-mariadb
     restart: unless-stopped
-    env_file:
-      - .env
-    volumes:
-      - mariadb_data:/config
     environment:
-      PUID: 1000
-      PGID: 1000
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: backend_db
+      MYSQL_USER: backend
+      MYSQL_PASSWORD: backendpass
       TZ: Asia/Jakarta
+    volumes:
+      - mariadb_data:/var/lib/mysql
 
 volumes:
   mariadb_data:
