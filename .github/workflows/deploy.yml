@@ -3,7 +3,7 @@ name: Deploy backend-js to Orange Pi
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
@@ -24,17 +24,17 @@ jobs:
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd ${{ secrets.APP_PATH }}
 
-            echo "🔄 Pull latest code"
-            git pull origin main
+            echo "Pull latest code"
+            git pull origin master
 
-            echo "🛑 Stop old container"
+            echo "Stop old container"
             docker stop backend-js || true
             docker rm backend-js || true
 
-            echo "🐳 Build new image"
+            echo "Build new image"
             docker build -t backend-js .
 
-            echo "🚀 Run new container"
+            echo "Run new container"
             docker run -d \
               --name backend-js \
               -p 3001:3001 \
