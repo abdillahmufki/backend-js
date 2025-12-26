@@ -11,14 +11,17 @@ services:
       - mariadb
 
   mariadb:
-    image: arm32v7/mariadb:10.5
+    image: linuxserver/mariadb:10.6.18
     container_name: backend-mariadb
     restart: unless-stopped
     env_file:
       - .env
     volumes:
-      - mariadb_data:/var/lib/mysql
-    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+      - mariadb_data:/config
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Asia/Jakarta
 
 volumes:
   mariadb_data:
