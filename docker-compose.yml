@@ -11,7 +11,7 @@ services:
       - mariadb
 
   mariadb:
-    image: linuxserver/mariadb:10.6.18
+    image: lscr.io/linuxserver/mariadb
     container_name: backend-mariadb
     restart: unless-stopped
     env_file:
