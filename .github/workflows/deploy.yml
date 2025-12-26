@@ -1,46 +1,35 @@
-name: Deploy backend-js to Orange Pi
+name: Deploy backend-js (Orange Pi)
 
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    environment: ACTION_DEPLOY
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-
-      - name: Deploy to server
+      - name: Build & Deploy Docker
         run: |
-          ssh -o StrictHostKeyChecking=no \
-          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd ${{ secrets.APP_PATH }}
+          echo "📦 Pull latest code"
+          git pull origin main
 
-            echo "🔄 Pull latest code"
-            git pull origin master
+          echo "🛑 Stop old container"
+          docker stop backend-js || true
+          docker rm backend-js || true
 
-            echo "🛑 Stop old container"
-            docker stop backend-js || true
-            docker rm backend-js || true
+          echo "🐳 Build new image"
+          docker build -t backend-js .
 
-            echo "🐳 Build new image"
-            docker build -t backend-js .
+          echo "🚀 Run new container"
+          docker run -d \
+            --name backend-js \
+            -p 3001:3001 \
+            --restart unless-stopped \
+            backend-js
 
-            echo "🚀 Run new container"
-            docker run -d \
-              --name backend-js \
-              -p 3001:3001 \
-              --restart unless-stopped \
-              backend-js
-
-            echo "✅ Deploy finished"
-          EOF
+          echo "✅ Deploy finished"
