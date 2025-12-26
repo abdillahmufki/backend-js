@@ -28,7 +28,7 @@ app.get("/hello", (req, res) => {
 
 app.get("/deploy", (req, res) => {
   res.json({
-    message: "Hello from auto deploy asdasdasdasas backend-js 👋",
+    message: "Hello from auto deploy fix backend-js 👋",
   });
 });
 
