@@ -13,13 +13,14 @@ services:
       - mariadb
 
   mariadb:
-    image: mariadb:10.11
+    image: mariadb:10.5
     container_name: backend-mariadb
     restart: unless-stopped
     env_file:
       - .env
     volumes:
       - mariadb_data:/var/lib/mysql
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
 
 volumes:
   mariadb_data:
