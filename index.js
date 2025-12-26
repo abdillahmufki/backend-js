@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mysql = require("mysql2/promise");
 
@@ -19,6 +20,32 @@ app.get("/", (req, res) => {
     status: "ok",
     message: "Backend JS running with MySQL 🚀",
   });
+});
+
+app.get("/users", async (req, res) => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT 
+        u.id,
+        u.name,
+        u.email,
+        u.created_at,
+        r.name AS role
+      FROM users u
+      LEFT JOIN roles r ON r.id = u.role_id
+      ORDER BY u.id ASC
+    `);
+
+    res.json({
+      count: rows.length,
+      data: rows,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: "Failed to fetch users",
+    });
+  }
 });
 
 app.get("/hello", (req, res) => {
