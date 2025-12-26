@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   backend-js:
     build: .
@@ -13,7 +11,7 @@ services:
       - mariadb
 
   mariadb:
-    image: mariadb:10.5
+    image: arm32v7/mariadb:10.5
     container_name: backend-mariadb
     restart: unless-stopped
     env_file:
