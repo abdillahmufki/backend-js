@@ -29,10 +29,8 @@ app.get("/users", async (req, res) => {
         u.id,
         u.name,
         u.email,
-        u.created_at,
-        r.name AS role
+        u.created_at
       FROM users u
-      LEFT JOIN roles r ON r.id = u.role_id
       ORDER BY u.id ASC
     `);
 
