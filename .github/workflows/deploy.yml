@@ -20,9 +20,9 @@ jobs:
           echo "🔄 Pull latest code"
           git pull origin master
 
-          echo "🐳 Docker compose deploy"
+          echo "🐳 Docker compose deploy (no cache)"
           docker compose down
-          docker compose build
-          docker compose up -d
+          docker compose build --no-cache
+          docker compose up -d --force-recreate
 
           echo "✅ Deploy finished"
